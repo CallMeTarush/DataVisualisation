@@ -1,0 +1,117 @@
+<link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet"/>
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
+<script src="https://cdn.webdatarocks.com/latest/webdatarocks.googlecharts.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<center>
+<h2>CSE3020</h2>
+<h2>Data visualization</h2>
+</center>
+<h3> 16BCE0656 </h3>
+<h3> Tarush Nagpal </h3>
+
+<table><tr><td style="width: 750px;"><div id="wdr-component"></div></td>
+<td><div id="googlechart-container" style="width:750px;height:550px;"></div></td></tr></table>
+    
+
+<script>
+var pivot = new WebDataRocks({
+	container: "#wdr-component",
+	toolbar: true,
+	report: {
+    "dataSource": {
+      "data": getJSONData()
+    },
+    "slice": {
+        "rows": [
+            {"uniqueName": "Category"}
+        ],
+        "columns": [
+            {"uniqueName": "Measures"}
+        ],
+        "measures": [
+            {"uniqueName": "Revenue"},
+            {"uniqueName": "Quantity"}
+        ]
+    }
+  },
+  reportcomplete: function() {
+    pivot.off("reportcomplete");
+    pivotTableReportComplete = true;
+    createGoogleChart();
+  }
+});
+var pivotTableReportComplete = false;
+var googleChartsLoaded = false;
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(onGoogleChartsLoaded);
+function onGoogleChartsLoaded() {
+  googleChartsLoaded = true;
+  if (pivotTableReportComplete) {
+  	createGoogleChart();
+  }
+}
+
+function createGoogleChart() {
+    if (googleChartsLoaded) {
+  
+        pivot.googlecharts.getData({ type: "area" }, 
+            drawChart, 
+            drawChart
+        );
+	}			
+}
+
+function drawChart(_data) {
+  var data = google.visualization.arrayToDataTable(_data.data);
+
+  var options = {
+  	title: "Values by Categories",
+    legend: { position: 'top' }
+  };
+
+  var chart = new google.visualization.AreaChart(document.getElementById('googlechart-container'));
+  chart.draw(data, options);
+}
+
+function getJSONData() {
+	return [
+    {
+        "Category": "Chocolate Bar",
+        "Revenue": 4477.50,
+        "Quantity": 2250
+    },
+    {
+        "Category": "Chocolate Bar",
+        "Revenue": 3482.50,
+        "Quantity": 1750
+    },
+    {
+        "Category": "Apple Jam",
+        "Revenue": 2370,
+        "Quantity": 600
+    },
+    {
+        "Category": "Apple Jam",
+        "Revenue": 987,
+        "Quantity": 250
+    },
+    {
+        "Category": "Banana Cake",
+        "Revenue": 5125,
+        "Quantity": 500
+    },
+    {
+        "Category": "Banana Cake",
+        "Revenue": 5125,
+        "Quantity": 500
+    },
+    {
+        "Category": "Coconut Biscuits",
+        "Revenue": 3937,
+        "Quantity": 750
+    },
+    ]
+}
+</script>
